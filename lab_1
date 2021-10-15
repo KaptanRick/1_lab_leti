@@ -1,0 +1,124 @@
+#include <iostream>
+
+using namespace std;
+
+void printTypesMemoryConsumption(std::ostream& out)
+{
+	out << "Типы потребления памяти (в битах)\n";
+	out << "int:           " << sizeof(int) << "\n";
+	out << "short int:     " << sizeof(short int) << "\n";
+	out << "long int:      " << sizeof(long int) << "\n";
+	out << "long long int: " << sizeof(long long int) << "\n";
+	out << "float:         " << sizeof(float) << "\n";
+	out << "double:        " << sizeof(double) << "\n";
+	out << "long double:   " << sizeof(long double) << "\n";
+	out << "char:          " << sizeof(char) << "\n";
+	out << "bool:          " << sizeof(bool) << "\n";
+}
+
+char ORDER_BREAK = ' ';
+
+string binaryStringView(int value)
+{
+	string res;
+	constexpr unsigned int orders = sizeof(value) * 8;
+	unsigned int mask = 1U << (orders - 1);
+	    for (int i = 0; i < orders; ++i)
+	    {
+	    	if (i != 0 && i % 8 == 0) res += ORDER_BREAK;
+		    if (i == 1) res += ORDER_BREAK;
+
+	    	res += (value & mask ? '1' : '0');
+	    	mask >>= 1;
+    	}
+	return res;
+}
+
+string binaryStringView(float _value)
+{
+	union {
+		int value;
+		float num_f;
+	};
+	num_f = _value;
+
+	constexpr unsigned int orders = sizeof(_value) * 8;
+	unsigned int mask = 1U << (orders - 1);
+	string res;
+    	for (int i = 0; i < orders; ++i)
+    	{
+	    	if (i == 1 || i == 9) res += ORDER_BREAK;
+	    	res += (value & mask ? '1' : '0');
+	    	mask >>= 1;
+    	}
+	return res;
+}
+
+string binaryStringView(double _value)
+{
+	union {
+		long long int value;
+		double num_f;
+	};
+	num_f = _value;
+
+	constexpr unsigned int orders = sizeof(_value) * 8;
+	unsigned long long int mask = 1ULL << (orders - 1);
+	string res;
+    	for (int i = 0; i < orders; ++i)
+    	{
+		if (i == 1 || i == 12) res += ORDER_BREAK;
+        	res += (value & mask ? '1' : '0');
+        	mask >>= 1;
+    	}
+	return res;
+}
+
+string sectionString(const std::string& sectionName)
+{
+	return "\n" + sectionName + '\n';
+}
+
+int main()
+{
+	cout << sectionString("Потребление памяти общими типами переменных:");
+	printTypesMemoryConsumption(std::cout);
+
+	cout << sectionString("Integers:");
+	
+	int int_1;
+	cout << "Введите положительое число типа Integer " ;
+	cin >> int_1;
+	cout << int_1 << ":  " << binaryStringView(int_1) << '\n';
+	
+	int int_2;
+	cout << "Введите отрицательное число типа Integer "; 
+	cin >> int_2;
+	cout << int_2 << ":  " << binaryStringView(int_2) << '\n';
+
+	cout << sectionString("Floats");
+	
+	float float_1;
+	cout << "Введите положительое число типа Floaf ";
+	cin >> float_1;
+	cout << float_1 << ":  " << binaryStringView(float_1) << '\n';
+	
+	float float_2;
+	cout << "Введите отрицательное число типа Float ";
+	cin >> float_2;
+	cout << float_2 << ":  " << binaryStringView(float_2) << '\n';
+    
+    cout << sectionString("Doubles");
+    
+    double double_1;
+    cout << "Введите положительое число типа Double ";
+    cin >> double_1;
+	cout << double_1 << ":  " << binaryStringView(double_1) << '\n';
+	
+	double double_2;
+    cout << "Введите отрицательное число типа Double ";
+    cin >> double_2;
+	cout << double_2 << ":  " << binaryStringView(double_2) << '\n';
+
+	return 0;
+}
